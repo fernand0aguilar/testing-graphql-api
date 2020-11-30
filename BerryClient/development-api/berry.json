@@ -1,0 +1,1 @@
+{"Schemas":[{"Name":"development-api","Type":"http","File":"development-api.graphql","Url":"https://3m2vlpfe3h.execute-api.us-east-1.amazonaws.com/development/graphql"}],"ClientName":"development-apiClient"}

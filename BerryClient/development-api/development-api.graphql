@@ -1,0 +1,107 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Query {
+  CustomerReadModel(id: ID!): CustomerReadModel
+  UserReadModel(id: ID!): UserReadModel
+  CustomerReadModels(id: UUIDPropertyFilter name: StringPropertyFilter surname: StringPropertyFilter photoUrl: StringPropertyFilter userId: UUIDPropertyFilter): [CustomerReadModel]
+  UserReadModels(id: UUIDPropertyFilter role: StringPropertyFilter): [UserReadModel]
+}
+
+type CustomerReadModel {
+  id: ID
+  name: String
+  surname: String
+  photoUrl: String
+  userId: ID
+}
+
+type UserReadModel {
+  id: ID
+  role: String
+}
+
+input UUIDPropertyFilter {
+  operation: UUIDOperations!
+  values: [ID!]!
+}
+
+enum UUIDOperations {
+  eq
+  notEq
+  less
+  greater
+  less_eq
+  greater_eq
+  in
+  between
+  contains
+  not_contains
+  begins_with
+}
+
+input StringPropertyFilter {
+  operation: StringOperations!
+  values: [String!]!
+}
+
+enum StringOperations {
+  eq
+  notEq
+  less
+  greater
+  less_eq
+  greater_eq
+  in
+  between
+  contains
+  not_contains
+  begins_with
+}
+
+type Mutation {
+  ChangeUserRole(input: ChangeUserRoleInput!): Boolean
+  DeleteCustomer(input: DeleteCustomerInput!): Boolean
+  DeleteUser(input: DeleteUserInput!): Boolean
+  SaveCustomer(input: SaveCustomerInput!): Boolean
+  SaveUser(input: SaveUserInput!): Boolean
+}
+
+input ChangeUserRoleInput {
+  username: String
+  role: String
+}
+
+input DeleteCustomerInput {
+  id: ID
+}
+
+input DeleteUserInput {
+  username: String
+}
+
+input SaveCustomerInput {
+  id: ID
+  name: String
+  surname: String
+  photo: String
+}
+
+input SaveUserInput {
+  username: String
+  password: String
+  role: String
+}
+
+type Subscription {
+  CustomerReadModel(id: ID!): CustomerReadModel
+  UserReadModel(id: ID!): UserReadModel
+  CustomerReadModels(id: UUIDPropertyFilter name: StringPropertyFilter surname: StringPropertyFilter photoUrl: StringPropertyFilter userId: UUIDPropertyFilter): CustomerReadModel
+  UserReadModels(id: UUIDPropertyFilter role: StringPropertyFilter): UserReadModel
+}
+
+"Exposes a URL that specifies the behaviour of this scalar."
+directive @specifiedBy("The URL that specifies the behaviour of this scalar." url: String!) on SCALAR
