@@ -1,9 +1,9 @@
 import express from "express";
 import fetch from "node-fetch";
 import "./config/envConfig"
+import expressPlayground from "graphql-playground-middleware-express";
 
 import {
-  PORT,
   developEnvironment,
   devClientAuthCredentials,
 } from "./config/constants";
@@ -20,9 +20,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running in http://localhost:${PORT}`);
-});
+app.get("/playground", expressPlayground({ endpoint: developEnvironment.graphqlUrl }))
 
 type UserCredentialsType = {
   clientId: string;
@@ -72,3 +70,5 @@ app.get("/users-info", async (req, res) => {
       res.send(data);
     });
 });
+
+export default app;
