@@ -1,3 +1,5 @@
+![Continuous Integration](https://github.com/fernand0aguilar/testing-graphql-api/workflows/Continuous%20Integration/badge.svg)
+
 # testing-graphql-api
 
 ## Test Plan
