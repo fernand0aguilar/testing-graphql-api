@@ -1,0 +1,55 @@
+{
+  "name": "testing-graphql-api",
+  "version": "1.0.0",
+  "description": "## Test Plan A Test Plan is a detailed document that describes the test strategy, objectives, schedule, estimation, deliverables, and resources required to perform testing for a software product.",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.4.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.9",
+    "@types/node": "^14.14.10",
+    "@types/node-fetch": "^2.5.7",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "^7.14.0",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "start": "node -r ts-node/register ./src/server.ts",
+    "start:watch": "nodemon",
+    "build": "tsc",
+    "lint:check": "eslint ./src/ --ext .ts",
+    "format:check": "eslint --fix ./src/*{ts,tsx}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fernand0aguilar/testing-graphql-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fernand0aguilar/testing-graphql-api/issues"
+  },
+  "homepage": "https://github.com/fernand0aguilar/testing-graphql-api#readme",
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
+  }
+}
