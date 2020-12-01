@@ -18,12 +18,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      
+
       - name: Install dependencies
         run: yarn
 
       - name: Build project
         run: yarn build
+
+      - name: create env file
+        run: |
+          touch .env
+          echo DEVELOPMENT_URL=${{ secrets.DEVELOPMENT_URL }} >> .env
+          echo DEVELOPMENT_CLIENT_ID=${{ secrets.DEVELOPMENT_CLIENT_ID }} >> .env
+          echo DEVELOPMENT_CLIENT_USERNAME=${{ secrets.DEVELOPMENT_CLIENT_USERNAME }} >> .env
+          echo DEVELOPMENT_CLIENT_PASSWORD=${{ secrets.DEVELOPMENT_CLIENT_PASSWORD }} >> .env
+          echo PRODUCTION_URL=${{ secrets.PRODUCTION_URL }} >> .env
+          echo PRODUCTION_CLIENT_ID=${{ secrets.PRODUCTION_CLIENT_ID }} >> .env
+          echo PRODUCTION_CLIENT_USERNAME=${{ secrets.PRODUCTION_CLIENT_USERNAME }} >> .env
+          echo PRODUCTION_CLIENT_PASSWORD=${{ secrets.PRODUCTION_CLIENT_PASSWORD }} >> .env
 
       - name: Test
         run: yarn test --watchAll=false
