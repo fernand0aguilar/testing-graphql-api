@@ -24,6 +24,7 @@
     "eslint": "^7.14.0",
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.6",
+    "superagent-defaults": "^0.1.14",
     "supertest": "^6.0.1",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
@@ -33,7 +34,7 @@
     "start": "node -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest ",
     "lint:check": "eslint ./src/ --ext .ts",
     "format:check": "eslint --fix ./src/*{ts,tsx}"
   },

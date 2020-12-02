@@ -1,12 +1,18 @@
 import { getUserToken } from "../src/server";
 import supertest from "supertest";
+import defaults from "superagent-defaults";
 
 import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
 
-let tokenDevelop = null;
+const request = defaults(supertest(developEnvironment.graphqlUrl));
 
 beforeAll(async () => {
-  tokenDevelop = await getUserToken(developEnvironment.signInUrl, devClientAuthCredentials)
+  const tokenDevelop = await getUserToken(developEnvironment.signInUrl, devClientAuthCredentials)
+  const commonHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + tokenDevelop
+  }
+  request.set(commonHeaders);
 })
 
 test("fetch UserReadModels", async (done) => {
@@ -18,10 +24,8 @@ test("fetch UserReadModels", async (done) => {
       }
     }`
   }
-  supertest(developEnvironment.graphqlUrl)
+  request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(queryToFetchUserReadModels)
     .expect("Content-Type", /json/)
     .expect(200)
@@ -70,10 +74,8 @@ test("fetch Single UserReadModel for specific id", async (done) => {
       }
     }`
   }
-  supertest(developEnvironment.graphqlUrl)
+  request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(queryToFetchSingleUserReadModel)
     .expect("Content-Type", /json/)
     .expect(200)
@@ -122,10 +124,8 @@ test("Check if CustomerReadModels is empty", async (done) => {
       }
     }`
   }
-  supertest(developEnvironment.graphqlUrl)
+  request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(queryToFetchCustomerReadModels)
     .expect("Content-Type", /json/)
     .expect(200)

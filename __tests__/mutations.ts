@@ -1,12 +1,18 @@
 import { getUserToken } from "../src/server";
 import supertest from "supertest";
+import defaults from "superagent-defaults";
 
 import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
 
-let tokenDevelop = null;
+const request = defaults(supertest(developEnvironment.graphqlUrl));
 
 beforeAll(async () => {
-  tokenDevelop = await getUserToken(developEnvironment.signInUrl, devClientAuthCredentials)
+  const tokenDevelop = await getUserToken(developEnvironment.signInUrl, devClientAuthCredentials)
+  const commonHeaders = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + tokenDevelop
+  }
+  request.set(commonHeaders);
 })
 
 describe('test user CRUD', () => {
@@ -58,15 +64,12 @@ describe('test user CRUD', () => {
   }
 
   test("It should verify that the user is not currently in the list", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
       .post('/')
-      .set("Content-Type", "application/json")
-      .set("Authorization", "Bearer " + tokenDevelop)
       .send(queryToFetchUserReadModels)
       .expect(200)
       .end((err, res) => {
         if(err) return done(err)
-        console.log("Verify UserNotInCurrentList response",res.body.data.UserReadModels)
         expect(res.body.data.UserReadModels).not.toContainEqual({
           id: testUserCredentialsInput.username, 
           role: testUserCredentialsInput.role
@@ -76,15 +79,12 @@ describe('test user CRUD', () => {
   });
 
   test("It should send mutationToSaveNewUser and return true", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(mutationToSaveNewUser)
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
-      console.log(res.body)
       expect(res.body.data.SaveUser).toEqual(true)
       done()
     })
@@ -92,10 +92,8 @@ describe('test user CRUD', () => {
 
   test("It should send the same mutationToSaveNewUser and return error for user already existing", 
   async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(mutationToSaveNewUser)
     .expect(200)
     .end((err, res) => {
@@ -107,10 +105,8 @@ describe('test user CRUD', () => {
   })
   
   test("It should verify that the user created was saved and exists in the list", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(queryToFetchUserReadModels)
     .end((err, res) => {
       if (err) return done(err);
@@ -124,25 +120,37 @@ describe('test user CRUD', () => {
     });
   })
   test("It should send the mutation to change user role and return true", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(mutationToChangeUserRole)
     .expect(200)
     .end((err, res) => {
-      console.log(res.body)
       if(err) return done(err)
       expect(res.body.data.ChangeUserRole).toEqual(true)
       done();
     })
   })
 
-  test("It should verify that the user has a different role", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+  test("It should verify that the user has a different role by querying for a single user", async (done) => {
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
+    .send({query: `query {
+        UserReadModel(id:"${testUserCredentialsInput.username}") {
+          id
+          role
+        }
+      }`})
+    .end((err, res) => {
+      if (err) return done(err);
+      expect(res.body).toBeInstanceOf(Object);
+      expect(res.body.data.UserReadModel.id).toEqual(testUserCredentialsInput.username)
+      expect(res.body.data.UserReadModel.role).toEqual("User")
+      done();
+    });
+  })
+  test("It should verify that the user has a different role", async (done) => {
+    request
+    .post('/')
     .send(queryToFetchUserReadModels)
     .end((err, res) => {
       if (err) return done(err);
@@ -155,31 +163,9 @@ describe('test user CRUD', () => {
       done();
     });
   })
-  test("It should verify that the user has a different role by querying for a single user", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
-    .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
-    .send({query: `query {
-        UserReadModel(id:"${testUserCredentialsInput.username}") {
-          id
-          role
-        }
-      }`})
-    .end((err, res) => {
-      if (err) return done(err);
-      console.log(res.body)
-      expect(res.body).toBeInstanceOf(Object);
-      expect(res.body.data.UserReadModel.id).toEqual(testUserCredentialsInput.username)
-      expect(res.body.data.UserReadModel.role).toEqual("User")
-      done();
-    });
-  })
   test("It should delete the user and return true", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
     .post('/')
-    .set("Content-Type", "application/json")
-    .set("Authorization", "Bearer " + tokenDevelop)
     .send(mutationToDeleteUser)
     .expect(200)
     .end((err, res) => {
@@ -189,10 +175,8 @@ describe('test user CRUD', () => {
     })
   })
   test("It should verify that the user was deleted in fact", async (done) => {
-    supertest(developEnvironment.graphqlUrl)
+    request
       .post('/')
-      .set("Content-Type", "application/json")
-      .set("Authorization", "Bearer " + tokenDevelop)
       .send(queryToFetchUserReadModels)
       .expect(200)
       .end((err, res) => {
@@ -205,9 +189,3 @@ describe('test user CRUD', () => {
       })
   })
 })
-
-/**
- * mutation {
-    ChangeUserRole(input:{username: "teste1234@teste.com", role: "user"})
-}
- */
