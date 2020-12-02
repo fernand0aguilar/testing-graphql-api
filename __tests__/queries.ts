@@ -1,6 +1,5 @@
-import app, { getUserToken } from "../src/server";
+import { getUserToken } from "../src/server";
 import supertest from "supertest";
-const request = supertest(app);
 
 import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
 
@@ -34,9 +33,32 @@ test("fetch UserReadModels", async (done) => {
         "id": devClientAuthCredentials.username,
         "role": "Admin"
       })
-      expect(res.body.data.UserReadModels).toHaveLength(4);
       done();
     });
+});
+
+test("Check if UserReadModels without authentication token return errors", 
+  async (done) => {
+    const queryToFetchUserReadModels = {
+      query: `query {
+        UserReadModels {
+          id
+          role
+        }
+      }`
+    }
+    supertest(developEnvironment.graphqlUrl)
+      .post('/')
+      .send(queryToFetchUserReadModels)
+      .expect("Content-Type", /json/)
+      .expect(200)
+      .end(function (err, res) {
+        if (err) return done(err);
+        expect(res.body).toBeInstanceOf(Object);
+        expect(res.body.errors[0].message).toEqual("Access denied for read model UserReadModel")
+        expect(res.body.data.UserReadModels).toBeNull();
+        done();
+      });
 });
 
 test("fetch Single UserReadModel for specific id", async (done) => {
@@ -64,9 +86,32 @@ test("fetch Single UserReadModel for specific id", async (done) => {
     });
 });
 
+test("check if Single UserReadModel without auth token return errors", 
+  async (done) => {
+    const queryToFetchSingleUserReadModel = {
+      query: `query {
+        UserReadModel(id: "${devClientAuthCredentials.username}") {
+          id
+          role
+        }
+      }`
+    }
+    supertest(developEnvironment.graphqlUrl)
+      .post('/')
+      .send(queryToFetchSingleUserReadModel)
+      .expect("Content-Type", /json/)
+      .expect(200)
+      .end(function (err, res) {
+        if (err) return done(err);
+        expect(res.body).toBeInstanceOf(Object);
+        expect(res.body.errors[0].message).toEqual("Access denied for read model UserReadModel")
+        expect(res.body.data.UserReadModel).toBeNull();
+        done();
+      });
+});
 
 test("Check if CustomerReadModels is empty", async (done) => {
-  const queryToFetchSingleUserReadModel = {
+  const queryToFetchCustomerReadModels = {
     query: `query {
       CustomerReadModels {
         name
@@ -81,7 +126,7 @@ test("Check if CustomerReadModels is empty", async (done) => {
     .post('/')
     .set("Content-Type", "application/json")
     .set("Authorization", "Bearer " + tokenDevelop)
-    .send(queryToFetchSingleUserReadModel)
+    .send(queryToFetchCustomerReadModels)
     .expect("Content-Type", /json/)
     .expect(200)
     .end(function (err, res) {
@@ -89,6 +134,31 @@ test("Check if CustomerReadModels is empty", async (done) => {
       const data = res.body.data.CustomerReadModels
       expect(data).toBeInstanceOf(Array);
       expect(data).toHaveLength(0)
+      done();
+    });
+});
+
+test("Check if CustomerReadModels without authentication token does not return errors ", async (done) => {
+  const queryToFetchCustomerReadModels = {
+    query: `query {
+      CustomerReadModels {
+        name
+        surname
+        userId
+        id
+        photoUrl
+      }
+    }`
+  }
+  supertest(developEnvironment.graphqlUrl)
+    .post('/')
+    .send(queryToFetchCustomerReadModels)
+    .expect("Content-Type", /json/)
+    .expect(200)
+    .end(function (err, res) {
+      if (err) return done(err);
+      expect(res.body.errors).toBeUndefined()
+      expect(res.body.data.CustomerReadModels).toHaveLength(0)
       done();
     });
 });

@@ -5,15 +5,9 @@ import expressPlayground from "graphql-playground-middleware-express";
 
 import {
   developEnvironment,
-  devClientAuthCredentials,
 } from "./config/constants";
 
 const app = express();
-
-// /**
-//  *  TODO ->
-//  * https://thenewstack.io/automatic-testing-for-graphql-apis/
-//  * */
 
 app.get("/", (req, res) => {
   console.log("hello world");
