@@ -28,7 +28,7 @@ type UserCredentialsType = {
   password: string;
 };
 
-async function getUserToken(url: string, userData: UserCredentialsType) {
+export async function getUserToken(url: string, userData: UserCredentialsType): Promise<string> {
   const apiResult = await fetch(url, {
     method: "POST",
     headers: {
@@ -44,31 +44,5 @@ async function getUserToken(url: string, userData: UserCredentialsType) {
   const jsonResult = await apiResult.json();
   return jsonResult.accessToken;
 }
-
-app.get("/users-info", async (req, res) => {
-  const developToken = await getUserToken(developEnvironment.signInUrl, devClientAuthCredentials)
-
-  fetch(developEnvironment.graphqlUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + developToken
-    },
-    body: JSON.stringify({
-      query: `{
-        UserReadModels {
-          id
-          role
-        }
-      }`,
-    }),
-  })
-    .then((result) => {
-      return result.json();
-    })
-    .then((data) => {
-      res.send(data);
-    });
-});
 
 export default app;

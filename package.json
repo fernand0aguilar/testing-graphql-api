@@ -80,7 +80,7 @@
       "js"
     ],
     "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "\\.ts$": "ts-jest"
     },
     "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
   }
