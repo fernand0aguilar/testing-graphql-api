@@ -5,7 +5,9 @@ import "../src/config/envConfig"
 import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
 import { getUserToken } from "../src/server";
 
-import authTestSuite from "../src/queries"
+import authTestSuite from "../src/tests/Queries"
+import UserMutationsTestSuite from "../src/tests/UserMutations"
+import BreakSaveUserMutationTestSuite from "../src/tests/EdgeCases"
 
 const request = defaults(supertest(developEnvironment.graphqlUrl));
 
@@ -19,3 +21,5 @@ beforeAll(async () => {
   })
 
 authTestSuite(request, developEnvironment, devClientAuthCredentials)
+UserMutationsTestSuite(request)
+BreakSaveUserMutationTestSuite(request)

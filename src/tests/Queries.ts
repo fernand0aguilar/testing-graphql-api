@@ -3,13 +3,15 @@ import supertest from "supertest";
 import { 
   queryToFetchUserReadModels, 
   queryToFetchSingleUserReadModel, 
-  queryToFetchCustomerReadModels } from "./config/constants"
+  queryToFetchCustomerReadModels } from "../config/constants"
 
-type Environment = {
-  signInUrl: string,
-  graphqlUrl: string
-}
-const authTestSuite = (request, environment: Environment, clientAuthCredentials): void => {
+import { EnvironmentType, ClientAuthCredentialsType } from "../config/types"
+
+const AuthTestSuite = (
+    request, 
+    environment: EnvironmentType, 
+    clientAuthCredentials: ClientAuthCredentialsType
+  ): void => {
   
   const environment_name = (environment.signInUrl.split('/').includes('development')) 
     ? 'development' 
@@ -112,4 +114,4 @@ const authTestSuite = (request, environment: Environment, clientAuthCredentials)
   })
 }
 
-export default authTestSuite;
+export default AuthTestSuite;

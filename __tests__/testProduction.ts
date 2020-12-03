@@ -5,7 +5,9 @@ import "../src/config/envConfig"
 import {productionEnvironment, prodClientAuthCredentials} from "../src/config/constants"
 import { getUserToken } from "../src/server";
 
-import authTestSuite from "../src/queries"
+import AuthTestSuite from "../src/tests/Queries"
+import UserMutationsTestSuite from "../src/tests/UserMutations"
+import BreakSaveUserMutationTestSuite from "../src/tests/EdgeCases"
 
 const request = defaults(supertest(productionEnvironment.graphqlUrl));
 
@@ -18,4 +20,6 @@ beforeAll(async () => {
     request.set(commonHeaders);
   })
 
-authTestSuite(request, productionEnvironment, prodClientAuthCredentials)
+AuthTestSuite(request, productionEnvironment, prodClientAuthCredentials)
+UserMutationsTestSuite(request)
+BreakSaveUserMutationTestSuite(request)
