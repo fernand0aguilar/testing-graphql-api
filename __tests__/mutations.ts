@@ -2,7 +2,15 @@ import { getUserToken } from "../src/server";
 import supertest from "supertest";
 import defaults from "superagent-defaults";
 
-import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
+import {
+  developEnvironment, 
+  devClientAuthCredentials,
+  mutationToSaveNewUser,
+  mutationToChangeUserRole,
+  mutationToDeleteUser,
+  queryToFetchUserReadModels,
+  queryToFetchSingleUserReadModel
+} from "../src/config/constants"
 
 const request = defaults(supertest(developEnvironment.graphqlUrl));
 
@@ -15,54 +23,14 @@ beforeAll(async () => {
   request.set(commonHeaders);
 })
 
-describe('test user CRUD', () => {
-  const queryToFetchUserReadModels = {
-    query: `query {
-      UserReadModels {
-        id
-        role
-      }
-    }`
-  }
-  const testUserCredentialsInput = {
-    username: "test123@test.com", 
-    password: "_Test123", 
-    role: "Admin"
-  }
 
-  const mutationToSaveNewUser = {
-    query: `
-      mutation {
-        SaveUser(
-            input: {
-            username: "${testUserCredentialsInput.username}", 
-            password: "${testUserCredentialsInput.password}", 
-            role: "${testUserCredentialsInput.role}"
-          }
-        )
-      }`
-  }
+const testUserCredentialsInput = {
+  username: "test123@test.com",
+  password: "_Test123",
+  role: "Admin",
+};
 
-  const mutationToChangeUserRole = {
-    query: `mutation {
-        ChangeUserRole(
-            input: {
-            username: "${testUserCredentialsInput.username}",  
-            role: "User"
-          }
-        )
-    }`
-  }
-  const mutationToDeleteUser = {
-    query: `mutation {
-        DeleteUser(
-            input: {
-            username: "${testUserCredentialsInput.username}",  
-          }
-        )
-    }`
-  }
-
+const testCaseToVerifyUserNotInList = () =>{
   test("It should verify that the user is not currently in the list", async (done) => {
     request
       .post('/')
@@ -77,11 +45,16 @@ describe('test user CRUD', () => {
         done();
       })
   });
+}
+
+describe('test user CRUD', () => {
+
+  testCaseToVerifyUserNotInList()
 
   test("It should send mutationToSaveNewUser and return true", async (done) => {
     request
     .post('/')
-    .send(mutationToSaveNewUser)
+    .send(mutationToSaveNewUser(testUserCredentialsInput))
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
@@ -94,7 +67,7 @@ describe('test user CRUD', () => {
   async (done) => {
     request
     .post('/')
-    .send(mutationToSaveNewUser)
+    .send(mutationToSaveNewUser(testUserCredentialsInput))
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
@@ -122,7 +95,7 @@ describe('test user CRUD', () => {
   test("It should send the mutation to change user role and return true", async (done) => {
     request
     .post('/')
-    .send(mutationToChangeUserRole)
+    .send(mutationToChangeUserRole(testUserCredentialsInput.username))
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
@@ -134,12 +107,7 @@ describe('test user CRUD', () => {
   test("It should verify that the user has a different role by querying for a single user", async (done) => {
     request
     .post('/')
-    .send({query: `query {
-        UserReadModel(id:"${testUserCredentialsInput.username}") {
-          id
-          role
-        }
-      }`})
+    .send(queryToFetchSingleUserReadModel(testUserCredentialsInput.username))
     .end((err, res) => {
       if (err) return done(err);
       expect(res.body).toBeInstanceOf(Object);
@@ -148,6 +116,7 @@ describe('test user CRUD', () => {
       done();
     });
   })
+
   test("It should verify that the user has a different role", async (done) => {
     request
     .post('/')
@@ -163,10 +132,11 @@ describe('test user CRUD', () => {
       done();
     });
   })
+
   test("It should delete the user and return true", async (done) => {
     request
     .post('/')
-    .send(mutationToDeleteUser)
+    .send(mutationToDeleteUser(testUserCredentialsInput.username))
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
@@ -174,6 +144,7 @@ describe('test user CRUD', () => {
       done()
     })
   })
+
   test("It should verify that the user was deleted in fact", async (done) => {
     request
       .post('/')
@@ -236,6 +207,7 @@ describe('breaking create user function', () => {
     .expect(200)
     .end((err, res) => {
       if(err) return done(err)
+      expect(res.body.errors).toHaveLength(0)
       expect(res.body.data.SaveUser).toEqual(true)
       done()
     })
