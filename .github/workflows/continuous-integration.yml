@@ -37,9 +37,13 @@ jobs:
           echo PRODUCTION_CLIENT_USERNAME=${{ secrets.PRODUCTION_CLIENT_USERNAME }} >> .env
           echo PRODUCTION_CLIENT_PASSWORD=${{ secrets.PRODUCTION_CLIENT_PASSWORD }} >> .env
 
-      - name: Test
-        run: yarn test --watchAll=false
-
+      - name: Jest Annotations & Coverage
+        uses: mattallty/jest-github-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            test-command: "yarn test"
+      
       - name: Making sure 'npm run lint' and 'npm run format' passes
         run: |
           yarn lint:check
