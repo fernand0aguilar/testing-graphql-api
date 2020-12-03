@@ -11,6 +11,19 @@ export const devClientAuthCredentials = {
   password: process.env.DEVELOPMENT_CLIENT_PASSWORD,
 };
 
+export const productionEnvironment = {
+  signInUrl: process.env.PRODUCTION_URL + "/auth/sign-in",
+  graphqlUrl: process.env.PRODUCTION_URL + "/graphql",
+};
+
+export const prodClientAuthCredentials = {
+  clientId: process.env.PRODUCTION_CLIENT_ID,
+  username: process.env.PRODUCTION_CLIENT_USERNAME,
+  password: process.env.PRODUCTION_CLIENT_PASSWORD,
+};
+
+
+
 export const queryToFetchUserReadModels = {
   query: `query {
       UserReadModels {
