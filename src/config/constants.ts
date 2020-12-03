@@ -11,3 +11,34 @@ export const devClientAuthCredentials = {
     "password": process.env.DEVELOPMENT_CLIENT_PASSWORD
 }
 
+export const queryToFetchUserReadModels = {
+    query: `query {
+      UserReadModels {
+        id
+        role
+      }
+    }`
+  }
+
+export const queryToFetchSingleUserReadModel = (id: string): Record<string, string> => {
+    return {
+      query: `query {
+        UserReadModel(id: "${id}") {
+          id
+          role
+        }
+      }`
+    }
+  }
+
+export const queryToFetchCustomerReadModels = {
+    query: `query {
+      CustomerReadModels {
+        name
+        surname
+        userId
+        id
+        photoUrl
+      }
+    }`
+  }

@@ -4,6 +4,11 @@ import defaults from "superagent-defaults";
 
 import {developEnvironment, devClientAuthCredentials} from "../src/config/constants"
 
+import { 
+  queryToFetchUserReadModels, 
+  queryToFetchSingleUserReadModel, 
+  queryToFetchCustomerReadModels } from "../src/config/constants"
+
 const request = defaults(supertest(developEnvironment.graphqlUrl));
 
 beforeAll(async () => {
@@ -16,14 +21,6 @@ beforeAll(async () => {
 })
 
 test("fetch UserReadModels", async (done) => {
-  const queryToFetchUserReadModels = {
-    query: `query {
-      UserReadModels {
-        id
-        role
-      }
-    }`
-  }
   request
     .post('/')
     .send(queryToFetchUserReadModels)
@@ -43,14 +40,6 @@ test("fetch UserReadModels", async (done) => {
 
 test("Check if UserReadModels without authentication token return errors", 
   async (done) => {
-    const queryToFetchUserReadModels = {
-      query: `query {
-        UserReadModels {
-          id
-          role
-        }
-      }`
-    }
     supertest(developEnvironment.graphqlUrl)
       .post('/')
       .send(queryToFetchUserReadModels)
@@ -66,17 +55,9 @@ test("Check if UserReadModels without authentication token return errors",
 });
 
 test("fetch Single UserReadModel for specific id", async (done) => {
-  const queryToFetchSingleUserReadModel = {
-    query: `query {
-      UserReadModel(id: "${devClientAuthCredentials.username}") {
-        id
-        role
-      }
-    }`
-  }
   request
     .post('/')
-    .send(queryToFetchSingleUserReadModel)
+    .send(queryToFetchSingleUserReadModel(devClientAuthCredentials.username))
     .expect("Content-Type", /json/)
     .expect(200)
     .end(function (err, res) {
@@ -90,17 +71,9 @@ test("fetch Single UserReadModel for specific id", async (done) => {
 
 test("check if Single UserReadModel without auth token return errors", 
   async (done) => {
-    const queryToFetchSingleUserReadModel = {
-      query: `query {
-        UserReadModel(id: "${devClientAuthCredentials.username}") {
-          id
-          role
-        }
-      }`
-    }
     supertest(developEnvironment.graphqlUrl)
       .post('/')
-      .send(queryToFetchSingleUserReadModel)
+      .send(queryToFetchSingleUserReadModel(devClientAuthCredentials.username))
       .expect("Content-Type", /json/)
       .expect(200)
       .end(function (err, res) {
@@ -113,17 +86,6 @@ test("check if Single UserReadModel without auth token return errors",
 });
 
 test("Check if CustomerReadModels is empty", async (done) => {
-  const queryToFetchCustomerReadModels = {
-    query: `query {
-      CustomerReadModels {
-        name
-        surname
-        userId
-        id
-        photoUrl
-      }
-    }`
-  }
   request
     .post('/')
     .send(queryToFetchCustomerReadModels)
@@ -139,17 +101,6 @@ test("Check if CustomerReadModels is empty", async (done) => {
 });
 
 test("Check if CustomerReadModels without authentication token does not return errors ", async (done) => {
-  const queryToFetchCustomerReadModels = {
-    query: `query {
-      CustomerReadModels {
-        name
-        surname
-        userId
-        id
-        photoUrl
-      }
-    }`
-  }
   supertest(developEnvironment.graphqlUrl)
     .post('/')
     .send(queryToFetchCustomerReadModels)
