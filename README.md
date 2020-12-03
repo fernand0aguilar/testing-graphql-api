@@ -1,3 +1,5 @@
+![Continuous Integration](https://github.com/fernand0aguilar/testing-graphql-api/workflows/Continuous%20Integration/badge.svg)
+
 # testing-graphql-api
 
 ## Test Plan
@@ -119,11 +121,3 @@ Types of Bugs that API testing detects
 * Incorrect handling of valid argument values 
 * Response Data is not structured correctly
 
-## TODO
-
-* Write user stories
-    * the user does this
-    * the user does that
-* Mock API
-* Test Production environment
-* Generalize headers for all calls
