@@ -2,6 +2,22 @@
 
 # testing-graphql-api
 
+## How To Run The Tests
+**With Jest**
+* Clone the repository
+* Install dependencies
+* `yarn test`
+
+**With [Majestic](https://github.com/Raathigesh/majestic)**
+* Clone the repository
+* `cd testing-graphql-api`
+* `npx majestic`
+* Go to `localhost:4000` and click `run tests` button
+
+## Tests Results
+[This is a complete report of the test suites](https://github.com/fernand0aguilar/testing-graphql-api/actions/runs/399705323)
+
+
 ## Test Plan
 A Test Plan is a detailed document that describes the test strategy, objectives, schedule, estimation, deliverables, and resources required to perform testing for a software product.
 
@@ -105,11 +121,34 @@ The acceptance criteria that the API must meet are the following:
         * Change admin status.
 
 ## 5 Architecture
-* ASP.NET Core Library 
-* ASP.NET Core Runtime / .NET SDK
-* StrawBerryShake GraphQL Client
-* Testing Framework - nUnit or xUnit or other
-* Continuous Integration pipeline
+* Typecript
+* ExpressJs
+* supertest
+* Jest
+* eslint
+* dotenv
+* Github Actions continuous integration pipeline 
+
+```
+├── package.json
+├── README.md
+├── src
+│   ├── config
+│   │   ├── constants.ts
+│   │   ├── envConfig.ts
+│   │   └── types.ts
+│   ├── index.ts
+│   ├── server.ts
+│   └── tests
+│       ├── CustomerMutations.ts
+│       ├── EdgeCases.ts
+│       ├── Queries.ts
+│       └── UserMutations.ts
+├── __tests__
+│   ├── testDevelopment.ts
+│   └── testProduction.ts
+├── tsconfig.json
+```
 
 ## 6 Assumptions
 Types of Bugs that API testing detects
