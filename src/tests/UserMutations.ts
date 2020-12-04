@@ -15,7 +15,7 @@ const testUserCredentialsInput = {
 const userMutationsTestSuite = (request): void => {
   return describe("test user CRUD", () => {
     
-    test("It should verify that the user is not currently in the list", 
+    test("verify that the user is not currently in the list", 
     async (done) => {
       request
         .post("/")
@@ -31,7 +31,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should send mutationToSaveNewUser and return true", 
+    test("send mutationToSaveNewUser and return true", 
     async (done) => {
       request
         .post("/")
@@ -44,7 +44,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should send the same mutationToSaveNewUser and return error for user already existing", 
+    test("send the same mutationToSaveNewUser and return error for user already existing", 
     async (done) => {
       request
         .post("/")
@@ -60,7 +60,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should verify that the user created was saved and exists in the list", 
+    test("verify that the user created was saved and exists in the list", 
     async (done) => {
       request
         .post("/")
@@ -77,7 +77,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should send the mutation to change user role and return true", 
+    test("send the mutation to change user role and return true", 
     async (done) => {
       request
         .post("/")
@@ -90,7 +90,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should verify that the user has a different role by querying for a single user",
+    test("verify that the user has a different role by querying for a single user",
     async (done) => {
       request
         .post("/")
@@ -108,7 +108,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should verify that the user has a different role", async (done) => {
+    test("verify that the user has a different role", async (done) => {
       request
         .post("/")
         .send(queryToFetchUserReadModels)
@@ -124,7 +124,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should delete the user and return true", async (done) => {
+    test("delete the user and return true", async (done) => {
       request
         .post("/")
         .send(mutationToDeleteUser(testUserCredentialsInput.username))
@@ -136,7 +136,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("It should verify that the user was deleted in fact", async (done) => {
+    test("verify that the user was deleted in fact", async (done) => {
       request
         .post("/")
         .send(queryToFetchUserReadModels)

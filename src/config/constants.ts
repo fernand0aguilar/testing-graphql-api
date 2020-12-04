@@ -1,3 +1,5 @@
+import { CustomerDataType, userCredentials } from "./types";
+
 export const PORT = process.env.PORT || 3000;
 
 export const developEnvironment = {
@@ -21,8 +23,6 @@ export const prodClientAuthCredentials = {
   username: process.env.PRODUCTION_CLIENT_USERNAME,
   password: process.env.PRODUCTION_CLIENT_PASSWORD,
 };
-
-
 
 export const queryToFetchUserReadModels = {
   query: `query {
@@ -56,13 +56,6 @@ export const queryToFetchCustomerReadModels = {
         photoUrl
       }
     }`,
-};
-
-
-type userCredentials = {
-  username: string;
-  password: string;
-  role: string;
 };
 
 export const mutationToSaveNewUser = (
@@ -105,5 +98,43 @@ export const mutationToDeleteUser = (id: string): Record<string,string> => {
           }
         )
       }`,
+  };
+};
+
+export const mutationToSaveCustomer = (customerData: CustomerDataType): Record<string,string> => {
+  return {
+    query: `
+        mutation {
+            SaveCustomer(input: {
+              id: "${customerData.id}"
+              name: "${customerData.name}"
+              surname: "${customerData.surname}"
+            })
+          }`,
+  };
+};
+
+export const mutationToDeleteCustomerById = (id: string): Record<string,string> => {
+  return {
+    query: `
+        mutation {
+            DeleteCustomer(input: {
+              id: "${id}"
+            })
+          }`,
+  };
+};
+
+export const queryCustomerById = (id: string): Record<string,string> => {
+  return {
+    query: `
+        query{
+            CustomerReadModel(id: "${id}") {
+                id
+                name
+                surname
+                userId
+            }
+        }`,
   };
 };

@@ -104,4 +104,18 @@ const breakSaveUserMutationTestSuite = (
   })
 }
 
+// test("Create New Customer fails by not passing name data", async (done) => {
+//   request
+//     .post("/")
+//     .send(mutationToSaveCustomer(customerData))
+//     .expect("Content-Type", /json/)
+//     .expect(200)
+//     .end(function (err, res) {
+//       if (err) return done(err);
+//       expect(res.body.errors[0].message).toEqual("Access denied for read model UserReadModel")
+//       expect(res.body.data.SaveCustomer).toBeNull();
+//       done();
+//     });
+// });
+
 export default breakSaveUserMutationTestSuite;

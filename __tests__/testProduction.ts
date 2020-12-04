@@ -7,7 +7,10 @@ import { getUserToken } from "../src/server";
 
 import AuthTestSuite from "../src/tests/Queries"
 import UserMutationsTestSuite from "../src/tests/UserMutations"
+import customerMutationsTestSuite from "../src/tests/CustomerMutations"
+
 import BreakSaveUserMutationTestSuite from "../src/tests/EdgeCases"
+
 
 const request = defaults(supertest(productionEnvironment.graphqlUrl));
 
@@ -23,3 +26,4 @@ beforeAll(async () => {
 AuthTestSuite(request, productionEnvironment, prodClientAuthCredentials)
 UserMutationsTestSuite(request)
 BreakSaveUserMutationTestSuite(request)
+customerMutationsTestSuite(request, prodClientAuthCredentials)
