@@ -2,6 +2,22 @@
 
 # testing-graphql-api
 
+## How To Run The Tests
+**With Jest**
+* Clone the repository
+* Install dependencies
+* `yarn test`
+
+**With Majestic**
+* Clone the repository
+* `cd testing-graphql-api`
+* `npx majestic`
+* Go to `localhost:4000` and click `run tests` button
+
+## Tests Results
+[This is a complete report of the test suites](https://github.com/fernand0aguilar/testing-graphql-api/actions/runs/399662832)
+
+
 ## Test Plan
 A Test Plan is a detailed document that describes the test strategy, objectives, schedule, estimation, deliverables, and resources required to perform testing for a software product.
 
