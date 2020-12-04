@@ -2,6 +2,9 @@
 import {
     mutationToDeleteUser,
     queryToFetchUserReadModels,
+    mutationToDeleteCustomerById,
+    mutationToSaveCustomer,
+    queryCustomerById
 } from "../config/constants"
   
 const testUserCredentialsInput = {
@@ -15,7 +18,7 @@ const breakSaveUserMutationTestSuite = (
   request,
   ): void => {
   return describe('breaking create user function', () => {
-    test("It should verify that the user is not currently in the list", 
+    test("1. It should verify that the user is not currently in the list", 
     async (done) => {
       request
         .post('/')
@@ -30,7 +33,7 @@ const breakSaveUserMutationTestSuite = (
           done();
         })
     });
-    test("It should send mutationToSaveNewUser with wrong password format and return error", async (done) => {
+    test("2. It should send mutationToSaveNewUser with wrong password format and return error", async (done) => {
       request
       .post('/')
       .send({
@@ -52,7 +55,7 @@ const breakSaveUserMutationTestSuite = (
       })
     })
 
-    test("It should verify that the user is not currently in the list", async (done) => {
+    test("3. It should verify that the user is not currently in the list", async (done) => {
       request
         .post('/')
         .send(queryToFetchUserReadModels)
@@ -66,7 +69,7 @@ const breakSaveUserMutationTestSuite = (
           done();
         })
     }); 
-    test("It should send mutationToSaveNewUser with right password format this time", 
+    test("4. It should send mutationToSaveNewUser with right password format this time", 
     async (done) => {
       request
       .post('/')
@@ -90,7 +93,7 @@ const breakSaveUserMutationTestSuite = (
       })
     })
 
-    test("It should delete the user and return true", async (done) => {
+    test("5. It should delete the user and return true", async (done) => {
       request
       .post('/')
       .send(mutationToDeleteUser(testUserCredentialsInput.username))
@@ -101,21 +104,58 @@ const breakSaveUserMutationTestSuite = (
         done()
       })
     })
-  })
+    test("6. Create New Customer fails by not passing name data", async (done) => {
+        request
+          .post("/")
+          .send({
+            query: `mutation {
+              SaveCustomer(input: {
+                id: "testUserFromEdgeCases"
+              })
+            }`
+          })
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) return done(err);
+            setTimeout(() => {
+              expect(res.body.errors).toHaveLength(1)
+              expect(res.body.data.SaveCustomer).toBeNull();
+              done();
+            }, 500)
+          });
+      });
+      test("7. Test if customer gets a proper photoUrl after being created", 
+      async (done) => {
+        request
+          .post("/")
+          .send(queryCustomerById("testUserFromEdgeCases"))
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) return done(err);
+            setTimeout(() => {
+              const responseData = res.body.data.CustomerReadModel;
+              expect(responseData.photoUrl).toEqual(`crm-api-dev-app/${responseData.id}/photo.jpg`);
+              done();
+            }, 500)
+          });
+      });
+      test("8. Delete created user from test 6", async (done) => {
+        request
+          .post("/")
+          .send(mutationToDeleteCustomerById("testUserFromEdgeCases"))
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) return done(err);
+            setTimeout(() => {
+              expect(res.body.data.DeleteCustomer).toBe(true);
+              done();
+            }, 500)
+          });
+      });
+    })
 }
-
-// test("Create New Customer fails by not passing name data", async (done) => {
-//   request
-//     .post("/")
-//     .send(mutationToSaveCustomer(customerData))
-//     .expect("Content-Type", /json/)
-//     .expect(200)
-//     .end(function (err, res) {
-//       if (err) return done(err);
-//       expect(res.body.errors[0].message).toEqual("Access denied for read model UserReadModel")
-//       expect(res.body.data.SaveCustomer).toBeNull();
-//       done();
-//     });
-// });
 
 export default breakSaveUserMutationTestSuite;

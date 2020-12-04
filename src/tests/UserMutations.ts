@@ -13,9 +13,9 @@ const testUserCredentialsInput = {
 };
 
 const userMutationsTestSuite = (request): void => {
-  return describe("test user CRUD", () => {
+  return describe("test user Mutations CRUD", () => {
     
-    test("verify that the user is not currently in the list", 
+    test("1. verify that the user is not currently in the list", 
     async (done) => {
       request
         .post("/")
@@ -31,7 +31,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("send mutationToSaveNewUser and return true", 
+    test("2. send mutationToSaveNewUser and return true", 
     async (done) => {
       request
         .post("/")
@@ -39,12 +39,14 @@ const userMutationsTestSuite = (request): void => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.data.SaveUser).toEqual(true);
-          done();
+          setTimeout(()=> {
+            expect(res.body.data.SaveUser).toEqual(true);
+            done();
+          }, 500)
         });
     });
 
-    test("send the same mutationToSaveNewUser and return error for user already existing", 
+    test("3. send the same mutationToSaveNewUser and return error for user already existing", 
     async (done) => {
       request
         .post("/")
@@ -60,7 +62,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("verify that the user created was saved and exists in the list", 
+    test("4. verify that the user created was saved and exists in the list", 
     async (done) => {
       request
         .post("/")
@@ -77,7 +79,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("send the mutation to change user role and return true", 
+    test("5. send the mutation to change user role and return true", 
     async (done) => {
       request
         .post("/")
@@ -85,12 +87,14 @@ const userMutationsTestSuite = (request): void => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.data.ChangeUserRole).toEqual(true);
-          done();
+          setTimeout(() => {
+            expect(res.body.data.ChangeUserRole).toEqual(true);
+            done();
+          }, 500)
         });
     });
 
-    test("verify that the user has a different role by querying for a single user",
+    test("6. verify that the user has a different role by querying for a single user",
     async (done) => {
       request
         .post("/")
@@ -99,16 +103,18 @@ const userMutationsTestSuite = (request): void => {
         )
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body).toBeInstanceOf(Object);
-          expect(res.body.data.UserReadModel.id).toEqual(
-            testUserCredentialsInput.username
-          );
-          expect(res.body.data.UserReadModel.role).toEqual("User");
-          done();
+          setTimeout(() => {
+            expect(res.body).toBeInstanceOf(Object);
+            expect(res.body.data.UserReadModel.id).toEqual(
+              testUserCredentialsInput.username
+              );
+              expect(res.body.data.UserReadModel.role).toEqual("User");
+              done();
+            }, 500)
         });
     });
 
-    test("verify that the user has a different role", async (done) => {
+    test("7. verify that the user has a different role", async (done) => {
       request
         .post("/")
         .send(queryToFetchUserReadModels)
@@ -124,7 +130,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("delete the user and return true", async (done) => {
+    test("8. delete the user and return true", async (done) => {
       request
         .post("/")
         .send(mutationToDeleteUser(testUserCredentialsInput.username))
@@ -136,7 +142,7 @@ const userMutationsTestSuite = (request): void => {
         });
     });
 
-    test("verify that the user was deleted in fact", async (done) => {
+    test("9. verify that the user was deleted in fact", async (done) => {
       request
         .post("/")
         .send(queryToFetchUserReadModels)

@@ -17,8 +17,8 @@ const AuthTestSuite = (
     ? 'development' 
     : 'production'
 
-  return describe(`tests authentications and list queries in ${environment_name}`, () => {
-    test("fetch UserReadModels", async (done) => {
+  return describe(`Tests authentications and list queries in ${environment_name}`, () => {
+    test("1. fetch UserReadModels", async (done) => {
       request
         .post('/')
         .send(queryToFetchUserReadModels)
@@ -36,7 +36,7 @@ const AuthTestSuite = (
         });
     });
 
-    test("Check if UserReadModels without authentication token return errors", 
+    test("2. Check if UserReadModels without authentication token return errors", 
       async (done) => {
         supertest(environment.graphqlUrl)
           .post('/')
@@ -52,7 +52,7 @@ const AuthTestSuite = (
           });
     });
 
-    test("fetch Single UserReadModel for specific id", async (done) => {
+    test("3. fetch Single UserReadModel for specific id", async (done) => {
       request
         .post('/')
         .send(queryToFetchSingleUserReadModel(clientAuthCredentials.username))
@@ -67,7 +67,7 @@ const AuthTestSuite = (
         });
     });
 
-    test("check if Single UserReadModel without auth token return errors", 
+    test("4. check if Single UserReadModel without auth token return errors", 
       async (done) => {
         supertest(environment.graphqlUrl)
           .post('/')
@@ -83,7 +83,7 @@ const AuthTestSuite = (
           });
     });
 
-    test("Check if CustomerReadModels is empty", async (done) => {
+    test("5. Check if CustomerReadModels is empty", async (done) => {
       request
         .post('/')
         .send(queryToFetchCustomerReadModels)
@@ -98,7 +98,7 @@ const AuthTestSuite = (
         });
     });
 
-    test("Check if CustomerReadModels without authentication token does not return errors ", async (done) => {
+    test("6. Check if CustomerReadModels without authentication token does not return errors ", async (done) => {
       supertest(environment.graphqlUrl)
         .post('/')
         .send(queryToFetchCustomerReadModels)

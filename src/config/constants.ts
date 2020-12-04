@@ -134,6 +134,7 @@ export const queryCustomerById = (id: string): Record<string,string> => {
                 name
                 surname
                 userId
+                photoUrl
             }
         }`,
   };

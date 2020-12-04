@@ -23,5 +23,5 @@ beforeAll(async () => {
 
 authTestSuite(request, developEnvironment, devClientAuthCredentials)
 UserMutationsTestSuite(request)
-BreakSaveUserMutationTestSuite(request)
 customerMutationsTestSuite(request, devClientAuthCredentials)
+BreakSaveUserMutationTestSuite(request)

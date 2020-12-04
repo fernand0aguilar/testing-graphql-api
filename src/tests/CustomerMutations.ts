@@ -23,8 +23,8 @@ const customerMutationsTestSuite = (
   request,
   clientAuthCredentials: ClientAuthCredentialsType
 ): void => {
-  return describe("test customer CRUD", () => {
-    test("Check if CustomerReadModels is empty", async (done) => {
+  return describe("test customer Mutations CRUD", () => {
+    test("1. Check if CustomerReadModels is empty", async (done) => {
       request
         .post("/")
         .send(queryToFetchCustomerReadModels)
@@ -39,7 +39,7 @@ const customerMutationsTestSuite = (
         });
     });
 
-    test("Create New Customer", async (done) => {
+    test("2. Create New Customer", async (done) => {
       request
         .post("/")
         .send(mutationToSaveCustomer(customerData))
@@ -54,7 +54,7 @@ const customerMutationsTestSuite = (
         });
     });
 
-    test("Check if user was created, exists in CustomerReadModels, and contains reference to who created it", 
+    test("3. Check if user was created, exists in CustomerReadModels, and contains reference to who created it", 
     async (done) => {
       request
         .post("/")
@@ -78,7 +78,7 @@ const customerMutationsTestSuite = (
         });
     });
 
-    test("Update previously created user by changing the name and surname", 
+    test("4. Update previously created user by changing the name and surname", 
     async (done) => {
       request
         .post("/")
@@ -94,7 +94,7 @@ const customerMutationsTestSuite = (
         });
     });
 
-    test("query single user by id and check if the user was indeed updated and still maintains userId reference", 
+    test("5. query single user by id and check if the user was indeed updated and still maintains userId reference", 
     async (done) => {
       request
         .post("/")
@@ -113,7 +113,7 @@ const customerMutationsTestSuite = (
           }, 500)
         });
     });
-    test("Delete User by passing its id", 
+    test("6. Delete User by passing its id", 
     async (done) => {
       request
         .post("/")
@@ -126,7 +126,7 @@ const customerMutationsTestSuite = (
           setTimeout(done, 1000)
         });
     });
-    test("Check if CustomerReadModels is empty", 
+    test("7. Check if CustomerReadModels is empty", 
     async (done) => {
       request
         .post("/")
